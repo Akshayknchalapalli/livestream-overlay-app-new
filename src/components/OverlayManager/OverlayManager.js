@@ -1,114 +1,129 @@
-// OverlayManager.js
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import Draggable from 'react-draggable';
+import { Resizable } from 'react-resizable';
 
-const OverlayManager = () => {
-  // State to hold overlay settings and manage updates
+import './OverlayStyles.css';
+
+function OverlayManager() {
+  // Define Overlay State
   const [overlays, setOverlays] = useState([]);
-  const [newOverlay, setNewOverlay] = useState({
-    content: '',
-    positionX: 0,
-    positionY: 0,
-    width: 100,
-    height: 100,
-  });
 
-  // Fetch overlay settings from the backend when the component mounts
-  useEffect(() => {
-    axios.get('/api/overlays')
-      .then((response) => {
-        setOverlays(response.data.overlays);
-      })
-      .catch((error) => {
-        console.error('Error fetching overlays:', error);
-      });
-  }, []);
+  // Function to Add an Overlay
+  function addOverlay(position, size, content) {
+    // Create a new overlay object
+    const newOverlay = {
+      position,
+      size,
+      content,
+    };
 
-  // Function to add a new overlay
-  const addOverlay = () => {
-    // Send a POST request to the backend to create a new overlay
-    axios.post('/api/overlays', newOverlay)
-      .then((response) => {
-        // Update the local state with the new overlay
-        setOverlays([...overlays, response.data.overlay]);
-        // Clear the input fields
-        setNewOverlay({
-          content: '',
-          positionX: 0,
-          positionY: 0,
-          width: 100,
-          height: 100,
-        });
-      })
-      .catch((error) => {
-        console.error('Error adding overlay:', error);
-      });
-  };
+    // Update the overlays state with the new overlay
+    setOverlays([...overlays, newOverlay]);
+  }
 
-  // Function to delete an overlay
-  const deleteOverlay = (overlayId) => {
-    // Send a DELETE request to the backend to delete the overlay
-    axios.delete(`/api/overlays/${overlayId}`)
-      .then(() => {
-        // Update the local state to remove the deleted overlay
-        setOverlays(overlays.filter((overlay) => overlay._id !== overlayId));
-      })
-      .catch((error) => {
-        console.error('Error deleting overlay:', error);
-      });
-  };
+   // Function to handle adding an overlay
+   function handleAddOverlay() {
+    // Implement logic to open a modal or form for user input
+    // For example, using a state variable to manage modal visibility
+    // After user input, call addOverlay with the provided data
+    const newPosition = { x: 100, y: 50 }; // Example position
+    const newSize = { width: 200, height: 100 }; // Example size
+    const overlayContent = 'Your overlay content'; // Example content
 
-  // Render the list of overlays and the form to add new overlays
+    addOverlay(newPosition, newSize, overlayContent);
+  }
+
+  // Function to Position an Overlay
+  function positionOverlay(index, newPosition) {
+    // Make a copy of the overlays array
+    const updatedOverlays = [...overlays];
+
+    // Update the position of the overlay at the specified index
+    updatedOverlays[index].position = newPosition;
+
+    // Update the overlays state with the modified array
+    setOverlays(updatedOverlays);
+  }
+
+  // Function to Resize an Overlay
+  function resizeOverlay(index, newSize) {
+    // Make a copy of the overlays array
+    const updatedOverlays = [...overlays];
+
+    // Update the size of the overlay at the specified index
+    updatedOverlays[index].size = newSize;
+
+    // Update the overlays state with the modified array
+    setOverlays(updatedOverlays);
+  }
+
+  // Function to handle dragging an overlay
+  function handleDragStop(index, data) {
+    const newPosition = { x: data.x, y: data.y };
+    positionOverlay(index, newPosition);
+  }
+
+  // Function to handle resizing an overlay
+  function handleResize(index, size) {
+    const newSize = { width: size.width, height: size.height };
+    resizeOverlay(index, newSize);
+  }
+
   return (
-    <div>
-      <h2>Overlay Manager</h2>
-      <div>
-        <h3>Add Overlay</h3>
-        <input
-          type="text"
-          placeholder="Content"
-          value={newOverlay.content}
-          onChange={(e) => setNewOverlay({ ...newOverlay, content: e.target.value })}
-        />
-        <input
-          type="number"
-          placeholder="X Position"
-          value={newOverlay.positionX}
-          onChange={(e) => setNewOverlay({ ...newOverlay, positionX: parseInt(e.target.value) })}
-        />
-        <input
-          type="number"
-          placeholder="Y Position"
-          value={newOverlay.positionY}
-          onChange={(e) => setNewOverlay({ ...newOverlay, positionY: parseInt(e.target.value) })}
-        />
-        <input
-          type="number"
-          placeholder="Width"
-          value={newOverlay.width}
-          onChange={(e) => setNewOverlay({ ...newOverlay, width: parseInt(e.target.value) })}
-        />
-        <input
-          type="number"
-          placeholder="Height"
-          value={newOverlay.height}
-          onChange={(e) => setNewOverlay({ ...newOverlay, height: parseInt(e.target.value) })}
-        />
-        <button onClick={addOverlay}>Add Overlay</button>
-      </div>
-      <div>
-        <h3>Overlays</h3>
-        <ul>
-          {overlays.map((overlay) => (
-            <li key={overlay._id}>
-              {overlay.content} - Position: {overlay.positionX}, {overlay.positionY}
-              <button onClick={() => deleteOverlay(overlay._id)}>Delete</button>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <div className="overlay-manager">
+      {/* Input fields for X and Y coordinates */}
+      <label>X Coordinate:</label>
+      <input
+        type="number"
+        value={xCoordinate}
+        onChange={(e) => setXCoordinate(parseInt(e.target.value))}
+      />
+      <label>Y Coordinate:</label>
+      <input
+        type="number"
+        value={yCoordinate}
+        onChange={(e) => setYCoordinate(parseInt(e.target.value))}
+      />
+      
+      {/* Create the "Add Overlay" button here */}
+      <button onClick={handleAddOverlay}>Add Overlay</button>
+
+      {/* Additional UI elements for positioning and resizing */}
+      {overlays.map((overlay, index) => (
+        <Draggable
+          key={index}
+          defaultPosition={{ x: overlay.position.x, y: overlay.position.y }}
+          onStop={(e, data) => handleDragStop(index, data)}
+        >
+          <Resizable
+            width={overlay.size.width}
+            height={overlay.size.height}
+            onResize={(e, { size }) => handleResize(index, size)}
+          >
+            <div className='custom-verlay'>
+              {overlay.content}
+            </div>
+          </Resizable>
+        </Draggable>
+      ))}
+      {overlays.map((overlay, index) => (
+        // Render the overlays with position and size
+        <div
+          key={index}
+          style={{
+            position: 'absolute',
+            left: overlay.position.x,
+            top: overlay.position.y,
+            width: overlay.size.width,
+            height: overlay.size.height,
+          }}
+        >
+          {overlay.content}
+        </div>
+      ))}
+
     </div>
   );
-};
+}
 
 export default OverlayManager;
