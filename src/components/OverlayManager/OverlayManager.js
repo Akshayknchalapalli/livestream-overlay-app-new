@@ -3,7 +3,7 @@ import Draggable from 'react-draggable';
 import { Resizable } from 'react-resizable';
 
 import './OverlayManager.css';
-import Overlay from './Overlay';
+import Overlay from '../Overlay';
 
 function OverlayManager() {
   // Define Overlay State
@@ -11,6 +11,7 @@ function OverlayManager() {
   const [xCoordinate, setXCoordinate] = useState(0);
   const [yCoordinate, setYCoordinate] = useState(0);
   const [overlayContent, setOverlayContent] = useState('');
+
 
   // Function to Add an Overlay
   function addOverlay(position, size, content) {
@@ -158,7 +159,10 @@ function OverlayManager() {
         </Resizable>
       ))}
 
-      {/* Render individual overlays */}
+      {/* Button to add a new overlay */}
+      <button onClick={openOverlayModal}>Add Overlay</button>
+
+      {/* Render overlays with Draggable */}
       {overlays.map((overlay, index) => (
         <Overlay
           key={index}
@@ -169,16 +173,7 @@ function OverlayManager() {
       ))}
 
       {/* UI elements for overlay management */}
-      <div className="overlay-controls">
-        <button onClick={handleAddOverlay}>Add Overlay</button>
-        <input
-          type="text"
-          placeholder="Overlay content"
-          value={overlayContent}
-          onChange={(e) => setOverlayContent(e.target.value)}
-        />
-        {/* Add more input fields or controls as needed */}
-      </div>
+      
     </div>
   );
 }
