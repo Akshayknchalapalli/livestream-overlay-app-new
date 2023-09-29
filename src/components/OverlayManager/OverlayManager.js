@@ -26,6 +26,18 @@ function OverlayManager() {
     setOverlays([...overlays, newOverlay]);
   }
 
+  // Function to Remove an Overlay
+  function removeOverlay(index) {
+    // Make a copy of the overlays array
+    const updatedOverlays = [...overlays];
+
+    // Remove the overlay at the specified index
+    updatedOverlays.splice(index, 1);
+
+    // Update the overlays state with the modified array
+    setOverlays(updatedOverlays);
+  }
+
    // Function to handle adding an overlay
     function handleAddOverlay() {
       // Collect user input for overlay properties (position, size, content)
@@ -170,6 +182,11 @@ function OverlayManager() {
       ))}
 
       {/* UI elements for overlay management */}
+      <div className="overlay-controls">
+        <button onClick={addOverlay}>Add Overlay</button>
+        <button onClick={() => removeOverlay(index)}>Remove Overlay</button>
+        {/* Add more controls as needed */}
+      </div>
       
     </div>
   );
