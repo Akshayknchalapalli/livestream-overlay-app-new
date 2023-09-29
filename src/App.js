@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactPlayer from 'react-player';
-
 import { useState } from 'react';
+import OverlayManager from './OverlayManager'; 
 
 // import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -21,6 +21,8 @@ function App() {
           className="embed-responsive-item"
         />
       </div>
+      {/* Include the OverlayManager component */}
+      <OverlayManager />
     </div>
     
   );
