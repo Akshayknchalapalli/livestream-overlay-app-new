@@ -9,6 +9,7 @@ function OverlayManager() {
   const [overlays, setOverlays] = useState([]);
   const [xCoordinate, setXCoordinate] = useState(0);
   const [yCoordinate, setYCoordinate] = useState(0);
+  const [overlayContent, setOverlayContent] = useState('');
 
   // Function to Add an Overlay
   function addOverlay(position, size, content) {
@@ -24,15 +25,19 @@ function OverlayManager() {
   }
 
    // Function to handle adding an overlay
-   function handleAddOverlay() {
-    // Implement logic to open a modal or form for user input
-    // For example, using a state variable to manage modal visibility
-    // After user input, call addOverlay with the provided data
-    const newPosition = { x: 100, y: 50 }; // Example position
-    const newSize = { width: 200, height: 100 }; // Example size
-    const overlayContent = 'Your overlay content'; // Example content
+    function handleAddOverlay() {
+      // Collect user input for overlay properties (position, size, content)
+      const newPosition = { x: xCoordinate, y: yCoordinate };
+      const newSize = { width: 200, height: 100 }; // Example size
+      const newOverlayContent = overlayContent;
 
-    addOverlay(newPosition, newSize, overlayContent);
+      // Call the addOverlay function with the provided data
+      addOverlay(newPosition, newSize, newOverlayContent);
+
+      // Clear input fields or reset state variables as needed
+      setXCoordinate(0);
+      setYCoordinate(0);
+      setOverlayContent('');
   }
 
   // Function to Position an Overlay
@@ -60,19 +65,27 @@ function OverlayManager() {
   }
 
   // Function to handle dragging an overlay
-  function handleDragStop(index, data) {
-    const newPosition = { x: data.x, y: data.y };
+  function handleOverlayDrag(index, data) {
+    // Calculate the new position based on the drag data
+    const newPosition = {
+      x: data.x,
+      y: data.y,
+    };
+
+    // Use the positionOverlay function to update the overlay's position
     positionOverlay(index, newPosition);
   }
 
   // Function to handle resizing an overlay
   function handleOverlayResize(index, size) {
-    // Create a copy of the overlays array to avoid mutating state directly
-    const updatedOverlays = [...overlays];
-    // Update the size of the specified overlay
-    updatedOverlays[index].size = { width: size.width, height: size.height };
-    // Update the overlays state with the new data
-    setOverlays(updatedOverlays);
+    // Calculate the new size based on the resize data
+    const newSize = {
+      width: size.width,
+      height: size.height,
+    };
+
+    // Use the resizeOverlay function to update the overlay's size
+    resizeOverlay(index, newSize);
   }
 
   return (
@@ -91,7 +104,15 @@ function OverlayManager() {
         onChange={(e) => setYCoordinate(parseInt(e.target.value))}
       />
 
-      {/* Create the "Add Overlay" button here */}
+      {/* Input field for overlay content */}
+      <label>Overlay Content:</label>
+      <input
+        type="text"
+        value={overlayContent}
+        onChange={(e) => setOverlayContent(e.target.value)}
+      />
+
+      {/* Create the "Add Overlay" button and draggable/resizable overlays here */}
       <button onClick={handleAddOverlay}>Add Overlay</button>
 
       {/* Additional UI elements for positioning and resizing */}
