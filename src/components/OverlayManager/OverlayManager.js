@@ -84,7 +84,7 @@ function OverlayManager() {
         value={yCoordinate}
         onChange={(e) => setYCoordinate(parseInt(e.target.value))}
       />
-      
+
       {/* Create the "Add Overlay" button here */}
       <button onClick={handleAddOverlay}>Add Overlay</button>
 
@@ -106,22 +106,25 @@ function OverlayManager() {
           </Resizable>
         </Draggable>
       ))}
-      {overlays.map((overlay, index) => (
-        // Render the overlays with position and size
-        <div
-          key={index}
-          style={{
-            position: 'absolute',
-            left: overlay.position.x,
-            top: overlay.position.y,
-            width: overlay.size.width,
-            height: overlay.size.height,
-          }}
-        >
-          {overlay.content}
-        </div>
-      ))}
 
+      {overlays.map((overlay, index) => (
+        <Draggable
+          key={index}
+          onDrag={(e, data) => handleOverlayDrag(index, data)}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              left: overlay.position.x,
+              top: overlay.position.y,
+              width: overlay.size.width,
+              height: overlay.size.height,
+            }}
+          >
+            {overlay.content}
+          </div>
+        </Draggable>
+      ))}
     </div>
   );
 }
