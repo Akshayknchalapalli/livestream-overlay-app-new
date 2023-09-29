@@ -16,3 +16,8 @@
 .video-player {
   border: 1px solid #ccc;
 }
+
+.app {
+  background-color: #f5f5f5;
+  padding: 20px;
+}
