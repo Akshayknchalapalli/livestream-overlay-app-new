@@ -3,7 +3,7 @@ import Draggable from 'react-draggable';
 import { Resizable } from 'react-resizable';
 
 import './OverlayManager.css';
-import Overlay from '../Overlay';
+import Overlay from './Overlay';
 
 function OverlayManager() {
   // Define Overlay State
@@ -159,10 +159,7 @@ function OverlayManager() {
         </Resizable>
       ))}
 
-      {/* Button to add a new overlay */}
-      <button onClick={openOverlayModal}>Add Overlay</button>
-
-      {/* Render overlays with Draggable */}
+      {/* Render overlays */}
       {overlays.map((overlay, index) => (
         <Overlay
           key={index}
