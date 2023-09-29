@@ -1,29 +1,26 @@
-import React, { useState } from 'react';
-import Draggable from 'react-draggable'; 
-import Resizable from 'react-resizable';
+// Overlay.js
+import React from 'react';
 
-function Overlay({overlay}) {
+const Overlay = ({ overlay }) => {
+  const { content, positionX, positionY, width, height } = overlay;
 
-  return (
-    <Draggable>
-      <Resizable width={overlay.width} height={overlay.height}>
-        <div>{overlay.name}</div>
-      </Resizable>
-    </Draggable>
-  )
-
-}
-
-function OverlayManager() {
-
-  const [overlays, setOverlays] = useState([/* array of overlays */]);
+  const overlayStyle = {
+    position: 'absolute',
+    left: `${positionX}%`,
+    top: `${positionY}%`,
+    width: `${width}%`,
+    height: `${height}%`,
+    background: 'rgba(255, 255, 255, 0.7)', // Adjust the background color and opacity
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  };
 
   return (
-    <div>
-     {overlays.map(overlay => (
-       <Overlay key={overlay.id} overlay={overlay} />  
-     ))}
+    <div style={overlayStyle}>
+      <span>{content}</span>
     </div>
-  )
+  );
+};
 
-}
+export default Overlay;

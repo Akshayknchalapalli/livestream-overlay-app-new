@@ -1,150 +1,114 @@
+// OverlayManager.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useState } from 'react';
-import styles from './OverlayManager.module.css';
-import 'bootstrap/dist/css/bootstrap.css';
 
-function OverlayManager() {
-
+const OverlayManager = () => {
+  // State to hold overlay settings and manage updates
   const [overlays, setOverlays] = useState([]);
+  const [newOverlay, setNewOverlay] = useState({
+    content: '',
+    positionX: 0,
+    positionY: 0,
+    width: 100,
+    height: 100,
+  });
 
+  // Fetch overlay settings from the backend when the component mounts
   useEffect(() => {
-    getOverlays();
+    axios.get('/api/overlays')
+      .then((response) => {
+        setOverlays(response.data.overlays);
+      })
+      .catch((error) => {
+        console.error('Error fetching overlays:', error);
+      });
   }, []);
 
-  const getOverlays = async () => {
-    try {
-      const response = await axios.get('/api/overlays');
-      setOverlays(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // Function to add a new overlay
+  const addOverlay = () => {
+    // Send a POST request to the backend to create a new overlay
+    axios.post('/api/overlays', newOverlay)
+      .then((response) => {
+        // Update the local state with the new overlay
+        setOverlays([...overlays, response.data.overlay]);
+        // Clear the input fields
+        setNewOverlay({
+          content: '',
+          positionX: 0,
+          positionY: 0,
+          width: 100,
+          height: 100,
+        });
+      })
+      .catch((error) => {
+        console.error('Error adding overlay:', error);
+      });
+  };
 
-  const addOverlay = async (overlay) => {
-    try {
-      const response = await axios.post('/api/overlays', overlay);
-      setOverlays([...overlays, response.data]);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // Function to delete an overlay
+  const deleteOverlay = (overlayId) => {
+    // Send a DELETE request to the backend to delete the overlay
+    axios.delete(`/api/overlays/${overlayId}`)
+      .then(() => {
+        // Update the local state to remove the deleted overlay
+        setOverlays(overlays.filter((overlay) => overlay._id !== overlayId));
+      })
+      .catch((error) => {
+        console.error('Error deleting overlay:', error);
+      });
+  };
 
-  const updateOverlay = async (updatedOverlay) => {
-    try {
-      await axios.put(`/api/overlays/${updatedOverlay.id}`, updatedOverlay);
-      setOverlays(overlays.map(o => {
-        if (o.id === updatedOverlay.id) {
-          return updatedOverlay;
-        }
-        return o;
-      }));
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  const deleteOverlay = async (overlayId) => {
-    try {
-      await axios.delete(`/api/overlays/${overlayId}`);
-      setOverlays(overlays.filter(o => o.id !== overlayId));
-    } catch (error) {
-      console.log(error);  
-    }
-  }
-
+  // Render the list of overlays and the form to add new overlays
   return (
     <div>
-      <h2>Manage Overlays</h2>
-
-      <button onClick={() => addOverlay({id: 3, name: 'New Overlay'})}>
-        Add Overlay
-      </button>
-
-      {overlays.map(overlay => (
-        <div key={overlay.id}>
-          {overlay.name}
-          
-          <button onClick={() => updateOverlay({...overlay, name: 'Updated Name'})}>
-            Update
-          </button>
-
-          <button onClick={() => deleteOverlay(overlay.id)}>
-            Delete
-          </button>
-        </div>
-      ))}
-
+      <h2>Overlay Manager</h2>
+      <div>
+        <h3>Add Overlay</h3>
+        <input
+          type="text"
+          placeholder="Content"
+          value={newOverlay.content}
+          onChange={(e) => setNewOverlay({ ...newOverlay, content: e.target.value })}
+        />
+        <input
+          type="number"
+          placeholder="X Position"
+          value={newOverlay.positionX}
+          onChange={(e) => setNewOverlay({ ...newOverlay, positionX: parseInt(e.target.value) })}
+        />
+        <input
+          type="number"
+          placeholder="Y Position"
+          value={newOverlay.positionY}
+          onChange={(e) => setNewOverlay({ ...newOverlay, positionY: parseInt(e.target.value) })}
+        />
+        <input
+          type="number"
+          placeholder="Width"
+          value={newOverlay.width}
+          onChange={(e) => setNewOverlay({ ...newOverlay, width: parseInt(e.target.value) })}
+        />
+        <input
+          type="number"
+          placeholder="Height"
+          value={newOverlay.height}
+          onChange={(e) => setNewOverlay({ ...newOverlay, height: parseInt(e.target.value) })}
+        />
+        <button onClick={addOverlay}>Add Overlay</button>
+      </div>
+      <div>
+        <h3>Overlays</h3>
+        <ul>
+          {overlays.map((overlay) => (
+            <li key={overlay._id}>
+              {overlay.content} - Position: {overlay.positionX}, {overlay.positionY}
+              <button onClick={() => deleteOverlay(overlay._id)}>Delete</button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
-}
-// Styling with CSS Modules
+};
 
-export default function OverlayManager() {
-
-   const [overlays, setOverlays] = useState([
-     {
-       id: 1,
-       text: 'Hello World',
-       color: 'red'  
-     },
-     {
-       id: 2, 
-       text: 'My Overlay',
-       color: 'blue'
-     }
-   ]);
- 
-   return (
-     <div className={styles.container}>
-       <h1>Overlay Manager</h1>
- 
-       <OverlaysList overlays={overlays} />
- 
-       <OverlayPreview overlay={overlays[0]} />
- 
-       <AddOverlay 
-         onAdd={(text, color) => {
-           setOverlays(prev => [...prev, {id: nextId, text, color}]);
-         }}
-       />
-     </div>
-   );
- }
- 
- // Reusable OverlaysList component
- function OverlaysList({overlays}) {
-   return (
-     <ul>
-       {overlays.map(overlay => (
-         <li key={overlay.id}>{overlay.text}</li>  
-       ))}
-     </ul>
-   );
- }
- 
- // Show preview of selected overlay 
- function OverlayPreview({overlay}) {
-   return (
-     <div style={{color: overlay.color}}>
-       {overlay.text}
-     </div>
-   );
- }
- 
- // Form to add new overlays
- function AddOverlay({onAdd}) {
- 
-   const [text, setText] = useState('');
-   const [color, setColor] = useState('red');
- 
-   const handleSubmit = e => {
-     e.preventDefault();
-     onAdd(text, color);
-     setText('');
-   }
- 
-   // ... form JSX
- 
-   return <form onSubmit={handleSubmit}>...</form>;
- }
+export default OverlayManager;
