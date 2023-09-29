@@ -108,23 +108,28 @@ function OverlayManager() {
       ))}
 
       {overlays.map((overlay, index) => (
-        <Draggable
+        <Resizable
           key={index}
-          onDrag={(e, data) => handleOverlayDrag(index, data)}
+          width={overlay.size.width}
+          height={overlay.size.height}
+          onResize={(e, { size }) => handleOverlayResize(index, size)}
         >
-          <div
-            style={{
-              position: 'absolute',
-              left: overlay.position.x,
-              top: overlay.position.y,
-              width: overlay.size.width,
-              height: overlay.size.height,
-            }}
+          <Draggable
+            onDrag={(e, data) => handleOverlayDrag(index, data)}
           >
-            {overlay.content}
-          </div>
-        </Draggable>
+            <div
+              style={{
+                position: 'absolute',
+                left: overlay.position.x,
+                top: overlay.position.y,
+              }}
+            >
+              {overlay.content}
+            </div>
+          </Draggable>
+        </Resizable>
       ))}
+
     </div>
   );
 }
