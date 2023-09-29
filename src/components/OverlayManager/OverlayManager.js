@@ -159,7 +159,7 @@ function OverlayManager() {
         </Resizable>
       ))}
 
-      {/* Render overlays */}
+      {/* Render individual overlays */}
       {overlays.map((overlay, index) => (
         <Overlay
           key={index}
