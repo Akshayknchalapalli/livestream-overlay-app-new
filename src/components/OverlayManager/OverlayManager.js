@@ -3,6 +3,7 @@ import Draggable from 'react-draggable';
 import { Resizable } from 'react-resizable';
 
 import './OverlayManager.css';
+import Overlay from './Overlay';
 
 function OverlayManager() {
   // Define Overlay State
@@ -156,6 +157,18 @@ function OverlayManager() {
           </Draggable>
         </Resizable>
       ))}
+
+      {/* Render individual overlays */}
+      {overlays.map((overlay, index) => (
+        <Overlay
+          key={index}
+          position={overlay.position}
+          size={overlay.size}
+          content={overlay.content}
+        />
+      ))}
+
+      {/* UI elements for overlay management */}
 
     </div>
   );
