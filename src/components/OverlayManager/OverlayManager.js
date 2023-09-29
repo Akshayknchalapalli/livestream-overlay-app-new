@@ -2,11 +2,7 @@ import React, { useState } from 'react';
 import Draggable from 'react-draggable';
 import { Resizable } from 'react-resizable';
 
-import React from 'react';
-import OverlayManager from './OverlayManager';
 import './OverlayManager.css';
-
-import './OverlayStyles.css';
 
 function OverlayManager() {
   // Define Overlay State
@@ -42,7 +38,7 @@ function OverlayManager() {
       setXCoordinate(0);
       setYCoordinate(0);
       setOverlayContent('');
-  }
+    }
 
   // Function to Position an Overlay
   function positionOverlay(index, newPosition) {
@@ -124,12 +120,12 @@ function OverlayManager() {
         <Draggable
           key={index}
           defaultPosition={{ x: overlay.position.x, y: overlay.position.y }}
-          onStop={(e, data) => handleDragStop(index, data)}
+          onStop={(e, data) => handleOverlayDrag(index, data)}
         >
           <Resizable
             width={overlay.size.width}
             height={overlay.size.height}
-            onResize={(e, { size }) => handleResize(index, size)}
+            onResize={(e, { size }) => handleOverlayResize(index, size)}
           >
             <div className='custom-verlay'>
               {overlay.content}
