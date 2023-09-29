@@ -95,7 +95,7 @@ function OverlayManager() {
   return (
     <div className="overlay-manager">
       {/* Input fields for X and Y coordinates */}
-      <label>X Coordinate:</label>
+      <label className="input-label">X Coordinate:</label>
       <input
         type="number"
         value={xCoordinate}
@@ -109,7 +109,7 @@ function OverlayManager() {
       />
 
       {/* Input field for overlay content */}
-      <label>Overlay Content:</label>
+      <label className="input-label">Overlay Content:</label>
       <input
         type="text"
         value={overlayContent}
@@ -117,7 +117,7 @@ function OverlayManager() {
       />
 
       {/* Create the "Add Overlay" button and draggable/resizable overlays here */}
-      <button onClick={handleAddOverlay}>Add Overlay</button>
+      <button className="add-overlay-button" onClick={handleAddOverlay}>Add Overlay</button>
 
       {/* Additional UI elements for positioning and resizing */}
       {overlays.map((overlay, index) => (
