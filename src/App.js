@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactPlayer from 'react-player';
 import { useState } from 'react';
-import OverlayManager from './OverlayManager'; 
+import OverlayManager from './components/OverlayManager/OverlayManager'; 
 
 // import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,12 +13,12 @@ function App() {
   // Inside your component's render method
   return (
     <div className="container">
-      <h1>Livestream App</h1>
+      <h1 className="app-title">Livestream App</h1>
       <div className="embed-responsive embed-responsive-16by9">
         <ReactPlayer
           url={rtspUrl}
           controls={true}
-          className="embed-responsive-item"
+          className="embed-responsive-item video-player"
         />
       </div>
       {/* Include the OverlayManager component */}
