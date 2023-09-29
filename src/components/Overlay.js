@@ -1,26 +1,23 @@
-// Overlay.js
 import React from 'react';
 
-const Overlay = ({ overlay }) => {
-  const { content, positionX, positionY, width, height } = overlay;
-
+function Overlay({ position, size, content }) {
+  // Style the overlay based on position and size
   const overlayStyle = {
     position: 'absolute',
-    left: `${positionX}%`,
-    top: `${positionY}%`,
-    width: `${width}%`,
-    height: `${height}%`,
-    background: 'rgba(255, 255, 255, 0.7)', // Adjust the background color and opacity
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    left: position.x,
+    top: position.y,
+    width: size.width,
+    height: size.height,
+    border: '1px solid #ccc',
+    // Add any other styles you want here
   };
 
   return (
     <div style={overlayStyle}>
-      <span>{content}</span>
+      {/* Render overlay content */}
+      {content}
     </div>
   );
-};
+}
 
 export default Overlay;
