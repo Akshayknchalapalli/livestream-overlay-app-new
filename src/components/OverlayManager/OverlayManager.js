@@ -117,6 +117,20 @@ function OverlayManager() {
     resizeOverlay(index, newSize);
   }
 
+  // Function to update an overlay's position and size
+  function handleOverlayUpdate(index, newPosition, newSize) {
+    // Make a copy of the overlays array
+    const updatedOverlays = [...overlays];
+
+    // Update the position and size of the overlay at the specified index
+    updatedOverlays[index].position = newPosition;
+    updatedOverlays[index].size = newSize;
+
+    // Update the overlays state with the modified array
+    setOverlays(updatedOverlays);
+  }
+
+
   return (
     <div className="overlay-manager">
       {/* Input fields for X and Y coordinates */}
@@ -193,6 +207,7 @@ function OverlayManager() {
           position={overlay.position}
           size={overlay.size}
           content={overlay.content}
+          onUpdate={(newPosition, newSize) => handleOverlayUpdate(index, newPosition, newSize)}
         />
       ))}
 
