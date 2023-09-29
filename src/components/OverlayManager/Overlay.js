@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Draggable from 'react-draggable';
 import { Resizable } from 'react-resizable';
+import './Overlay.css';
 
 function Overlay({ position, size, content, onUpdate }) {
   // State variables for position and size
@@ -34,14 +35,12 @@ function Overlay({ position, size, content, onUpdate }) {
 
   return (
     <Draggable onDrag={handleDrag}>
-      <Resizable
-        width={overlaySize.width}
-        height={overlaySize.height}
-        onResize={handleResize}
-      >
-        <div style={overlayStyle}>
-          {/* Render overlay content */}
-          {content}
+      <Resizable width={size.width} height={size.height} onResize={handleResize}>
+        <div className="overlay-container" style={overlayStyle}>
+          <div className="overlay-content">
+            {/* Render overlay content */}
+            {content}
+          </div>
         </div>
       </Resizable>
     </Draggable>
