@@ -4,6 +4,7 @@ import { Resizable } from 'react-resizable';
 
 import './OverlayManager.css';
 import Overlay from './Overlay';
+import Modal from 'react-modal';
 
 function OverlayManager() {
   // Define Overlay State
@@ -11,6 +12,9 @@ function OverlayManager() {
   const [xCoordinate, setXCoordinate] = useState(0);
   const [yCoordinate, setYCoordinate] = useState(0);
   const [overlayContent, setOverlayContent] = useState('');
+  const [indexToRemove, setIndexToRemove] = useState(null);
+  const [isAddingOverlay, setIsAddingOverlay] = useState(false);
+  const [newOverlayContent, setNewOverlayContent] = useState('');
 
 
   // Function to Add an Overlay
@@ -24,18 +28,29 @@ function OverlayManager() {
 
     // Update the overlays state with the new overlay
     setOverlays([...overlays, newOverlay]);
+    setIsAddingOverlay(false); // Close the modal/form after adding the overlay
+    setNewOverlayContent(''); // Clear the input field
+  }
+
+  // Function to Open the Overlay Addition Modal/Form
+  function openOverlayModal() {
+    setIsAddingOverlay(true);
+  }
+
+  // Function to Close the Overlay Addition Modal/Form
+  function closeOverlayModal() {
+    setIsAddingOverlay(false);
+    setNewOverlayContent(''); // Clear the input field
   }
 
   // Function to Remove an Overlay
-  function removeOverlay(index) {
-    // Make a copy of the overlays array
-    const updatedOverlays = [...overlays];
-
-    // Remove the overlay at the specified index
-    updatedOverlays.splice(index, 1);
-
-    // Update the overlays state with the modified array
-    setOverlays(updatedOverlays);
+  function removeOverlay() {
+    if (indexToRemove !== null) {
+      const updatedOverlays = overlays.slice(); // Make a copy of the overlays array
+      updatedOverlays.splice(indexToRemove, 1); // Remove the overlay at the specified index
+      setOverlays(updatedOverlays); // Update the overlays state with the modified array
+      setIndexToRemove(null); // Reset the indexToRemove state
+    }
   }
 
    // Function to handle adding an overlay
@@ -183,11 +198,26 @@ function OverlayManager() {
 
       {/* UI elements for overlay management */}
       <div className="overlay-controls">
-        <button onClick={addOverlay}>Add Overlay</button>
-        <button onClick={() => removeOverlay(index)}>Remove Overlay</button>
+      <button onClick={openOverlayModal}>Add Overlay</button>
+      <button onClick={removeOverlay}>Remove Overlay</button>
         {/* Add more controls as needed */}
       </div>
-      
+
+      {/* Modal/Form for Adding Overlays */}
+      <Modal
+        isOpen={isAddingOverlay}
+        onRequestClose={closeOverlayModal}
+        contentLabel="Add Overlay Modal"
+      >
+        <h2>Add New Overlay</h2>
+        <textarea
+          value={newOverlayContent}
+          onChange={(e) => setNewOverlayContent(e.target.value)}
+          placeholder="Enter overlay content here..."
+        />
+        <button onClick={() => addOverlay(newOverlayContent)}>Add</button>
+        <button onClick={closeOverlayModal}>Cancel</button>
+      </Modal>
     </div>
   );
 }
