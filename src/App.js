@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [overlays, setOverlays] = useState([]);
-  const rtspUrl = 'http://localhost:5000/livestream/rtmp://f6f4edf29d2f.entrypoint.cloud.wowza.com/app-M4vtDLC6'; // Replace with your RTSP URL
+  const rtspUrl = 'http://localhost:5000/livestream/rtmp://7ef85eea2114.entrypoint.cloud.wowza.com/app-8Mr993br'; // Replace with your RTSP URL
 
   // Inside your component's render method
   return (
