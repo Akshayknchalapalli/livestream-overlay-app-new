@@ -169,7 +169,16 @@ function OverlayManager() {
       ))}
 
       {/* UI elements for overlay management */}
-
+      <div className="overlay-controls">
+        <button onClick={handleAddOverlay}>Add Overlay</button>
+        <input
+          type="text"
+          placeholder="Overlay content"
+          value={overlayContent}
+          onChange={(e) => setOverlayContent(e.target.value)}
+        />
+        {/* Add more input fields or controls as needed */}
+      </div>
     </div>
   );
 }
