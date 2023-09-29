@@ -7,6 +7,8 @@ import './OverlayStyles.css';
 function OverlayManager() {
   // Define Overlay State
   const [overlays, setOverlays] = useState([]);
+  const [xCoordinate, setXCoordinate] = useState(0);
+  const [yCoordinate, setYCoordinate] = useState(0);
 
   // Function to Add an Overlay
   function addOverlay(position, size, content) {
@@ -64,9 +66,13 @@ function OverlayManager() {
   }
 
   // Function to handle resizing an overlay
-  function handleResize(index, size) {
-    const newSize = { width: size.width, height: size.height };
-    resizeOverlay(index, newSize);
+  function handleOverlayResize(index, size) {
+    // Create a copy of the overlays array to avoid mutating state directly
+    const updatedOverlays = [...overlays];
+    // Update the size of the specified overlay
+    updatedOverlays[index].size = { width: size.width, height: size.height };
+    // Update the overlays state with the new data
+    setOverlays(updatedOverlays);
   }
 
   return (
