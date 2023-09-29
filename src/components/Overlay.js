@@ -1,4 +1,6 @@
 import React from 'react';
+import Draggable from 'react-draggable';
+import { Resizable } from 'react-resizable';
 
 function Overlay({ position, size, content }) {
   // Style the overlay based on position and size
@@ -13,10 +15,14 @@ function Overlay({ position, size, content }) {
   };
 
   return (
-    <div style={overlayStyle}>
-      {/* Render overlay content */}
-      {content}
-    </div>
+    <Draggable>
+      <Resizable width={size.width} height={size.height}>
+        <div style={overlayStyle}>
+          {/* Render overlay content */}
+          {content}
+        </div>
+      </Resizable>
+    </Draggable>
   );
 }
 
