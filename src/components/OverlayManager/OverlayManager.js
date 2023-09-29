@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import Draggable from 'react-draggable';
 import { Resizable } from 'react-resizable';
 
+import React from 'react';
+import OverlayManager from './OverlayManager';
+import './OverlayManager.css';
+
 import './OverlayStyles.css';
 
 function OverlayManager() {
