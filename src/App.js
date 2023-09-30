@@ -1,46 +1,41 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
-import { useState } from 'react';
-import OverlayManager from './components/OverlayManager/OverlayManager'; 
-import axios from 'axios';
 
-// import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import OverlayManager from './components/OverlayManager';
+import { getOverlays, addOverlay, updateOverlay, deleteOverlay } from './api';
 
 function App() {
-  const [overlays, setOverlays] = useState([]);
-  const rtspUrl = 'http://localhost:5000/livestream/rtmp://7ef85eea2114.entrypoint.cloud.wowza.com/app-8Mr993br'; // Replace with your RTSP URL
 
-  // Create a JSON object with the RTSP URL
-  const data = { rtsp_url: rtspUrl };
+  const [overlays, setOverlays] = useState([]);
 
   useEffect(() => {
-    axios.get('/overlay-settings')
-      .then(res => {
-        setOverlays(res.data);  
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    getOverlays()
+      .then(res => setOverlays(res.data)) 
+      .catch(err => console.log(err));
   }, []);
 
-  // Inside your component's render method
+  const handleAdd = (overlay) => {
+    addOverlay(overlay)
+      .then(newOverlay => {
+        setOverlays(prev => [...prev, newOverlay]);
+      })
+  };
+
+  // Other handler functions for update, delete
+
   return (
-    <div className="container">
-      <h1 className="app-title">Livestream App</h1>
-      <div className="embed-responsive embed-responsive-16by9">
-        <ReactPlayer
-          url={rtspUrl}
-          controls={true}
-          className="embed-responsive-item video-player"
-        />
-      </div>
-      {/* Include the OverlayManager component */}
-      <OverlayManager />
+    <div className="App">
+      <ReactPlayer url="/path/to/video.mp4" />
+
+      <OverlayManager
+        overlays={overlays}
+        onAdd={handleAdd}
+        onUpdate={handleUpdate}
+        onDelete={handleDelete}  
+      />
     </div>
-    
   );
-  
+
 }
 
 export default App;
