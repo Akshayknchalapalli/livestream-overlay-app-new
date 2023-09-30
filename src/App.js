@@ -2,6 +2,7 @@ import React from 'react';
 import ReactPlayer from 'react-player';
 import { useState } from 'react';
 import OverlayManager from './components/OverlayManager/OverlayManager'; 
+import axios from 'axios';
 
 // import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,23 +14,15 @@ function App() {
   // Create a JSON object with the RTSP URL
   const data = { rtsp_url: rtspUrl };
 
-  // Make a POST request to the Flask route
-  fetch('/rtsp-url', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-  })
-  .then(response => response.json())
-  .then(data => {
-      // Handle the response from the backend, if needed
-      console.log(data.message);
-  })
-  .catch(error => {
-      // Handle any errors that occur during the POST request
-      console.error('Error:', error);
-  });
+  useEffect(() => {
+    axios.get('/overlay-settings')
+      .then(res => {
+        setOverlays(res.data);  
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, []);
 
   // Inside your component's render method
   return (
