@@ -21,7 +21,26 @@ function App() {
       })
   };
 
-  // Other handler functions for update, delete
+  const handleUpdate = (updatedOverlay) => {
+    updateOverlay(updatedOverlay)
+      .then(res => {
+        setOverlays(prev => prev.map(o => {
+          if (o._id === updatedOverlay._id) {
+            return updatedOverlay;
+          }
+          return o;
+        }))
+      })
+      .catch(err => console.log(err));
+  }
+  
+  const handleDelete = (overlayId) => {
+    deleteOverlay(overlayId)
+      .then(() => {
+        setOverlays(prev => prev.filter(o => o._id !== overlayId));
+      })
+      .catch(err => console.log(err));
+  }
 
   return (
     <div className="App">
